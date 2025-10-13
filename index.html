@@ -78,10 +78,34 @@
       text-decoration: none;
       color: #2c3e50;
       font-weight: bold;
+      cursor: pointer;
     }
     .subjects a:hover {
       background: #bfa76f;
       color: white;
+    }
+    .lessons-list a {
+      display: block;
+      margin: 0.3em 0;
+      background: #ddd;
+      padding: 0.4em 0.6em;
+      border-radius: 6px;
+      text-decoration: none;
+      color: #2c3e50;
+      font-weight: normal;
+      cursor: default;
+    }
+    .lessons-list a:hover {
+      background: #bfa76f;
+      color: white;
+    }
+    .back-link {
+      margin-bottom: 1em;
+      display: inline-block;
+      color: #bfa76f;
+      cursor: pointer;
+      font-weight: bold;
+      text-decoration: underline;
     }
     @keyframes fadeIn {
       from {opacity: 0;}
@@ -151,18 +175,26 @@
 <section id="summaries">
   <h2>Occasional Summaries</h2>
   <div class="subjects">
-    <a href="summaries/math.pdf" target="_blank">Math</a>
-    <a href="summaries/physics.pdf" target="_blank">Physics</a>
-    <a href="summaries/chemistry.pdf" target="_blank">Chemistry</a>
-    <a href="summaries/science.pdf" target="_blank">Science</a>
-    <a href="summaries/scientific_education.pdf" target="_blank">Scientific Education</a>
-    <a href="summaries/english.pdf" target="_blank">English</a>
-    <a href="summaries/french.pdf" target="_blank">French</a>
-    <a href="summaries/philosophy.pdf" target="_blank">Philosophy</a>
-    <a href="summaries/history.pdf" target="_blank">History</a>
-    <a href="summaries/geography.pdf" target="_blank">Geography</a>
-    <a href="summaries/civil_moral_education.pdf" target="_blank">Civil & Moral Education</a>
-    <a href="summaries/arabic.pdf" target="_blank">Arabic</a>
+    <a onclick="showLessons('Math')">Math</a>
+    <a onclick="showLessons('Physics')">Physics</a>
+    <a onclick="showLessons('Chemistry')">Chemistry</a>
+    <a onclick="showLessons('Science')">Science</a>
+    <a onclick="showLessons('Scientific Education')">Scientific Education</a>
+    <a onclick="showLessons('English')">English</a>
+    <a onclick="showLessons('French')">French</a>
+    <a onclick="showLessons('Philosophy')">Philosophy</a>
+    <a onclick="showLessons('History')">History</a>
+    <a onclick="showLessons('Geography')">Geography</a>
+    <a onclick="showLessons('Civil & Moral Education')">Civil & Moral Education</a>
+    <a onclick="showLessons('Arabic')">Arabic</a>
+  </div>
+</section>
+
+<section id="lessons" style="display:none;">
+  <h2 id="lessons-title"></h2>
+  <span class="back-link" onclick="backToSummaries()">← Back to Summaries</span>
+  <div class="lessons-list" id="lessons-list">
+    <!-- Lesson links will go here -->
   </div>
 </section>
 
@@ -190,10 +222,40 @@
       document.getElementById('agendaContent').innerHTML = `<p>Failed to load agenda.</p>`;
     }
   }
+
+  function showLessons(subject) {
+    // Hide other sections, show lessons section
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    const lessonsSection = document.getElementById('lessons');
+    lessonsSection.style.display = 'block';
+    lessonsSection.classList.add('active');
+
+    // Set title
+    document.getElementById('lessons-title').textContent = subject + " Lessons";
+
+    // Generate 20 placeholder lessons
+    const lessonsList = document.getElementById('lessons-list');
+    lessonsList.innerHTML = ''; // Clear previous lessons
+    for (let i = 1; i <= 20; i++) {
+      const lesson = document.createElement('a');
+      lesson.textContent = `Lesson ${i}`;
+      lesson.href = "#"; // Placeholder link, can be replaced with actual URLs later
+      lessonsList.appendChild(lesson);
+    }
+  }
+
+  function backToSummaries() {
+    // Hide lessons, show summaries
+    document.getElementById('lessons').style.display = 'none';
+    document.getElementById('lessons').classList.remove('active');
+    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
+    document.getElementById('summaries').classList.add('active');
+  }
 </script>
 
 </body>
 </html>
+
 
 
 
