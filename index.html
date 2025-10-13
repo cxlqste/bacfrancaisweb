@@ -84,26 +84,25 @@
       background: #bfa76f;
       color: white;
     }
-    .lessons-list a {
+    .lessons a {
       display: block;
       margin: 0.3em 0;
+      padding: 0.3em 0.5em;
+      border-radius: 5px;
       background: #ddd;
-      padding: 0.4em 0.6em;
-      border-radius: 6px;
+      color: #333;
       text-decoration: none;
-      color: #2c3e50;
       font-weight: normal;
-      cursor: default;
     }
-    .lessons-list a:hover {
+    .lessons a:hover {
       background: #bfa76f;
       color: white;
     }
-    .back-link {
-      margin-bottom: 1em;
+    #backToSubjects {
       display: inline-block;
-      color: #bfa76f;
+      margin-bottom: 1em;
       cursor: pointer;
+      color: #bfa76f;
       font-weight: bold;
       text-decoration: underline;
     }
@@ -174,27 +173,28 @@
 
 <section id="summaries">
   <h2>Occasional Summaries</h2>
-  <div class="subjects">
-    <a onclick="showLessons('Math')">Math</a>
-    <a onclick="showLessons('Physics')">Physics</a>
-    <a onclick="showLessons('Chemistry')">Chemistry</a>
-    <a onclick="showLessons('Science')">Science</a>
-    <a onclick="showLessons('Scientific Education')">Scientific Education</a>
-    <a onclick="showLessons('English')">English</a>
-    <a onclick="showLessons('French')">French</a>
-    <a onclick="showLessons('Philosophy')">Philosophy</a>
-    <a onclick="showLessons('History')">History</a>
-    <a onclick="showLessons('Geography')">Geography</a>
-    <a onclick="showLessons('Civil & Moral Education')">Civil & Moral Education</a>
-    <a onclick="showLessons('Arabic')">Arabic</a>
+  
+  <!-- Subjects list -->
+  <div id="subjectsList" class="subjects">
+    <a onclick="showLessons('math')">Math</a>
+    <a onclick="showLessons('physics')">Physics</a>
+    <a onclick="showLessons('chemistry')">Chemistry</a>
+    <a onclick="showLessons('science')">Science</a>
+    <a onclick="showLessons('scientific_education')">Scientific Education</a>
+    <a onclick="showLessons('english')">English</a>
+    <a onclick="showLessons('french')">French</a>
+    <a onclick="showLessons('philosophy')">Philosophy</a>
+    <a onclick="showLessons('history')">History</a>
+    <a onclick="showLessons('geography')">Geography</a>
+    <a onclick="showLessons('civil_moral_education')">Civil & Moral Education</a>
+    <a onclick="showLessons('arabic')">Arabic</a>
   </div>
-</section>
 
-<section id="lessons" style="display:none;">
-  <h2 id="lessons-title"></h2>
-  <span class="back-link" onclick="backToSummaries()">← Back to Summaries</span>
-  <div class="lessons-list" id="lessons-list">
-    <!-- Lesson links will go here -->
+  <!-- Lessons list (hidden by default) -->
+  <div id="lessonsList" class="lessons" style="display:none;">
+    <div id="backToSubjects" onclick="backToSubjects()">← Back to Subjects</div>
+    <h3 id="lessonSubjectTitle"></h3>
+    <div id="lessonLinks"></div>
   </div>
 </section>
 
@@ -202,6 +202,12 @@
   function showSection(id) {
     document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
     document.getElementById(id).classList.add('active');
+
+    // Also reset summaries view if needed
+    if(id === 'summaries') {
+      document.getElementById('subjectsList').style.display = 'block';
+      document.getElementById('lessonsList').style.display = 'none';
+    }
   }
 
   async function loadAgenda() {
@@ -224,37 +230,37 @@
   }
 
   function showLessons(subject) {
-    // Hide other sections, show lessons section
-    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-    const lessonsSection = document.getElementById('lessons');
-    lessonsSection.style.display = 'block';
-    lessonsSection.classList.add('active');
+    // Show lessons container, hide subjects list
+    document.getElementById('subjectsList').style.display = 'none';
+    document.getElementById('lessonsList').style.display = 'block';
 
-    // Set title
-    document.getElementById('lessons-title').textContent = subject + " Lessons";
+    // Set the subject title nicely capitalized & spaced
+    let prettySubject = subject.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+    document.getElementById('lessonSubjectTitle').textContent = `Lessons for ${prettySubject}`;
 
-    // Generate 20 placeholder lessons
-    const lessonsList = document.getElementById('lessons-list');
-    lessonsList.innerHTML = ''; // Clear previous lessons
-    for (let i = 1; i <= 20; i++) {
-      const lesson = document.createElement('a');
-      lesson.textContent = `Lesson ${i}`;
-      lesson.href = "#"; // Placeholder link, can be replaced with actual URLs later
-      lessonsList.appendChild(lesson);
+    const lessonLinksDiv = document.getElementById('lessonLinks');
+    lessonLinksDiv.innerHTML = ''; // clear old lessons
+
+    // Generate 20 lessons dynamically
+    for(let i = 1; i <= 20; i++) {
+      const lessonLink = document.createElement('a');
+      lessonLink.textContent = `Lesson ${i}`;
+      lessonLink.href = `summaries/${subject}_lesson_${i}.pdf`; // Dynamic PDF link
+      lessonLink.target = '_blank'; // open PDF in new tab
+      lessonLinksDiv.appendChild(lessonLink);
     }
   }
 
-  function backToSummaries() {
-    // Hide lessons, show summaries
-    document.getElementById('lessons').style.display = 'none';
-    document.getElementById('lessons').classList.remove('active');
-    document.querySelectorAll('section').forEach(sec => sec.classList.remove('active'));
-    document.getElementById('summaries').classList.add('active');
+  function backToSubjects() {
+    // Hide lessons, show subjects list
+    document.getElementById('lessonsList').style.display = 'none';
+    document.getElementById('subjectsList').style.display = 'block';
   }
 </script>
 
 </body>
 </html>
+
 
 
 
